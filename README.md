@@ -10,11 +10,24 @@ Android Auto for IDrive
 [![Buy Me A Coffee](https://img.shields.io/badge/support-buymeacoffee-5f7fff)](https://www.buymeacoffee.com/q4JVoxz)
 ![MIT Licensed](https://img.shields.io/github/license/hufman/AndroidAutoIdrive)
 
+What is it ?
+------------
+
+An extra integration point for your phone apps to better integrate with your car.
+
+How does it work ?
+------------------
+
 The BMW/Mini IDrive NBT does not offer native Android Auto integration, but does provide a very powerful Connected Apps convergence option with many exciting integration points into the car. This project is an effort to implement most of the features of Android Auto as unofficial BMW/Mini Connected Apps.
 
-By relying on the Connected Apps technology, this app greatly extends the functionality of the car without needing any modifications. Any MY2014 or newer BMW or Mini equipped with NBT or NBT Evo and the "Navigation System Professional (S609A)" [option](https://www.mdecoder.com/) or "BMW Apps (6NR)" or "Mini Connected (SA6NM)" options should be compatible.
+By relying on the Connected Apps technology, this app greatly extends the functionality of the car **without needing any modifications**.
 
 [![App List](https://hufman.github.io/AndroidAutoIdrive/images/demo-applist.gif)<br />Gallery](https://hufman.github.io/AndroidAutoIdrive/gallery.html)
+
+Supported cars
+--------------
+
+Any MY2014 or newer BMW or Mini equipped with NBT or NBT Evo and the "Navigation System Professional (S609A)" [option](https://www.mdecoder.com/) or "BMW Apps (6NR)" or "Mini Connected (SA6NM)" options should be compatible.
 
 Overview
 --------
@@ -23,109 +36,82 @@ As part of the Connected Apps feature, when the phone connects over USB (or Blue
 
 Android Auto for IDrive, combined with the safety benefits of the tactile IDrive controller, allows the user to interact with their incoming notifications and control their phone's music, while the phone is tucked out of reach.
 
-Getting Started
----------------
+Where can I get it ?
+--------------------
 
 This app requires that the BMW or Mini Connected app for your car is installed and can successfully add Connected and Calendar entries to your car's Connected Apps menu.
 
-Download the APK from the [Releases page](https://github.com/hufman/AndroidAutoIdrive/releases/latest). Choose the one that says "sentry" to automatically upload crash reports, or choose "nonalytics" otherwise. After starting, the app should detect the Connected app and start waiting for the car connection.
+| 🚗 Stable build | 🔧 Development build |
+|-----------------|----------------------|
+| Download the APK from the [Releases page](https://github.com/hufman/AndroidAutoIdrive/releases/latest) | [Download the latest dev build](https://androidautoidrive.s3.amazonaws.com/hufman/AndroidAutoIdrive/androidautoidrive-latest-master-nomap-nonalytics-release.apk) |
 
-If you'd like to try out the latest build, [download it here](https://androidautoidrive.s3.amazonaws.com/hufman/AndroidAutoIdrive/androidautoidrive-latest-master-nomap-nonalytics-release.apk)!
+
+For the stable build, you can download the APK that says `sentry` to automatically upload crash reports.
+Choose the `nonalytics` build if you do not want to send any crash data.
 
 Check out the [FAQ](https://hufman.github.io/AndroidAutoIdrive/faq.html) if you run into problems.
 
 User Guide
 ----------
 
-![Phone Connection](https://hufman.github.io/AndroidAutoIdrive/images/screenshot-connection.png)
+| | |
+|--|--|
+| **Connecting to the car** ||
+After connecting the phone to the car, the official Connected app should show this car icon in the status bar. When this icon appears, this app should connect and add its functionality to the car. See [this guide](https://hufman.github.io/AndroidAutoIdrive/connection.html) for tips on improving the connection reliability of the Connected app.|![Phone Connection](https://hufman.github.io/AndroidAutoIdrive/images/screenshot-connection.png)|
+| **Seeing the connected apps** ||
+|After all the apps are connected, a bunch of new entries will show up in the car's Connected menu. Besides the official Calendar and Connected apps, there should be a new Audioplayer icon and a book icon with no label. This book icon is the Notifications app, if enabled.|![Phone App List](https://hufman.github.io/AndroidAutoIdrive/images/screenshot-phoneapps.jpg)|
+| **Seeing the music/media apps** ||
+|Several new entries will be added to the Media section of the control screen. The Audioplayer icon is the one with the main functionality, while the other displayed apps above the Audioplayer are quick shortcuts to switch playback to the respective apps. This screenshot also shows the official Spotify app at the bottom of the list.|![Music App List](https://hufman.github.io/AndroidAutoIdrive/images/screenshot-medialist.jpg)|
 
-After connecting the phone to the car, the official Connected app should show this car icon in the status bar. When this icon appears, this app should connect and add its functionality to the car.
-
-See [this guide](https://hufman.github.io/AndroidAutoIdrive/connection.html) for tips on improving the connection reliability of the Connected app.
-
-![Phone App List](https://hufman.github.io/AndroidAutoIdrive/images/screenshot-phoneapps.jpg)
-
-After all the apps are connected, a bunch of new entries will show up in the car's Connected menu. Besides the official Calendar and Connected apps, there should be a new Audioplayer icon and a book icon with no label. This book icon is the Notifications app, if enabled.
-
-![Music App List](https://hufman.github.io/AndroidAutoIdrive/images/screenshot-medialist.jpg)
-
-Several new entries will be added to the Media section of the control screen. The Audioplayer icon is the one with the main functionality, while the other displayed apps above the Audioplayer are quick shortcuts to switch playback to the respective apps. This screenshot also shows the official Spotify app at the bottom of the list.
 
 Implemented Features
 --------------------
 
-  - Google Assistant
-    - Any voice assistant installed on the phone is added as a Connected App entry
-    - Google Assistant works the best, but Alexa, Bixby, and Cortana are also compatible
-    - The voice assistant app can be set as a hardware shortcut button for convenience
-  - Phone Notifications
-    - Popup about new notifications
-    - Supports Dismiss, Mark As Read, or other notification actions
-  - Google Maps
-    - Basic search and routing
-    - Includes some dark themes
-    - Not compiled by default, because showing Google Maps in a car is against the Maps API license
-  - Control of Android Auto compatible music apps
-    - Supports browsing and searching apps' music libraries
-    - Supports selecting from a list of currently-queued songs, as well as basic back/next control
-    - Integrates into the car's audio context, for automatic resume and hardware button control
-    - Supports controlling any active music session, even apps that aren't Android Auto compatible
-    - Automatically updates the screen to follow the active app
-    - Recommended compatible apps:
-      - Audiobooks and Podcasts:
-        - [Acast Podcast Player](https://play.google.com/store/apps/details?id=com.acast.nativeapp)
-        - [AntennaPod](https://play.google.com/store/apps/details?id=de.danoeh.antennapod)
-        - [The Bob & Tom Show](https://play.google.com/store/apps/details?id=com.radio.station.BOB.TOM)
-        - [Castbox](https://play.google.com/store/apps/details?id=fm.castbox.audiobook.radio.podcast)
-        - [Google Play Books](https://play.google.com/store/apps/details?id=com.google.android.apps.books)
-        - [iVooz](https://play.google.com/store/apps/details?id=com.ivoox.app)
-        - [Libro.fm Audiobooks](https://play.google.com/store/apps/details?id=fm.libro.librofm)
-        - [Listen Audiobook Player](https://play.google.com/store/apps/details?id=com.acmeandroid.listen)
-        - [Player FM](https://play.google.com/store/apps/details?id=fm.player)
-        - [Podcast Addict](https://play.google.com/store/apps/details?id=com.bambuna.podcastaddict)
-        - [Voice Audiobook Player](https://play.google.com/store/apps/details?id=de.ph1b.audiobook)
-      - Music Library
-        - [AIMP](https://play.google.com/store/apps/details?id=com.aimp.player)
-        - [Black Player](https://play.google.com/store/apps/details?id=com.musicplayer.blackplayerfree)
-        - [DSub](https://play.google.com/store/apps/details?id=github.daneren2005.dsub)
-        - [jetAudio HD](https://play.google.com/store/apps/details?id=com.jetappfactory.jetaudio)
-        - [Media Monkey](https://play.google.com/store/apps/details?id=com.ventismedia.android.mediamonkey)
-        - [Musicolet Music Player](https://play.google.com/store/apps/details?id=in.krosbits.musicolet)
-        - [Neutron Music Player](https://play.google.com/store/apps/details?id=com.neutroncode.mp)
-        - [Plex](https://play.google.com/store/apps/details?id=com.plexapp.android) (only music and podcasts)
-        - [PowerAmp](https://play.google.com/store/apps/details?id=com.maxmpz.audioplayer)
-        - [Retro Music Player](https://play.google.com/store/apps/details?id=code.name.monkey.retromusic)
-        - [Rocket Player](https://play.google.com/store/apps/details?id=com.jrtstudio.AnotherMusicPlayer)
-        - [TimberX Music Player](https://play.google.com/store/apps/details?id=com.naman14.timberx)
-        - [VLC For Android](https://play.google.com/store/apps/details?id=org.videolan.vlc)
-      - Radio
-        - [AP News](https://play.google.com/store/apps/details?id=mnn.Android)
-        - [ARD Audiothek](https://play.google.com/store/apps/details?id=de.ard.audiothek)
-        - [BFM](https://play.google.com/store/apps/details?id=my.bfm.app)
-        - [Dash Radio](https://play.google.com/store/apps/details?id=com.dashradio.dash)
-        - [DI.FM](https://play.google.com/store/apps/details?id=com.audioaddict.di)
-        - [Energy Radio](https://play.google.com/store/apps/details?id=radioenergy.app)
-        - [HOT97 Official](https://play.google.com/store/apps/details?id=com.jacapps.whhl)
-        - [Nederland.FM](https://play.google.com/store/apps/details?id=nl.nibbixsoft.app)
-        - [NHL](https://play.google.com/store/apps/details?id=com.nhl.gc1112.free)
-        - [ntv Nachrichten](https://play.google.com/store/apps/details?id=de.lineas.lit.ntv.android)
-        - [NYTimes](https://play.google.com/store/apps/details?id=com.nytimes.android)
-        - [R101](https://play.google.com/store/apps/details?id=it.r101)
-        - [Radio 105](https://play.google.com/store/apps/details?id=it.froggy.android.radio105)
-        - [Radio FM](https://play.google.com/store/apps/details?id=com.radio.fmradio)
-        - [Radio Monte Carlo](https://play.google.com/store/apps/details?id=it.froggy.android.rmc)
-        - [RTL 102.5](https://play.google.com/store/apps/details?id=com.rtl.rtlapp)
-        - [Scanner Radio](https://play.google.com/store/apps/details?id=com.scannerradio)
-        - [SiriusXM](https://play.google.com/store/apps/details?id=com.sirius)
-        - [Simple Radio](https://play.google.com/store/apps/details?id=com.streema.simpleradio)
-        - [sunshine live](https://play.google.com/store/apps/details?id=app.sunshinelive.de.sunshinelive)
-        - [Versuz Radio](https://play.google.com/store/apps/details?id=com.versuzradio)
-        - [Virgin Radio Italy](https://play.google.com/store/apps/details?id=it.froggy.android.virginradio)
-      - Streaming Services
-        - [Apple Music](https://play.google.com/store/apps/details?id=com.apple.android.music)
-        - [SoundCloud](https://play.google.com/store/apps/details?id=com.soundcloud.android)
-        - [Spotify](https://play.google.com/store/apps/details?id=com.spotify.music)
-        - [Tidal](https://play.google.com/store/apps/details?id=com.aspiro.tidal)
+<details>
+<summary>🎙 Voice Assistants</summary>
+
+- Any voice assistant installed on the phone is added as a Connected App entry
+- Google Assistant works the best, but Alexa, Bixby, and Cortana are also compatible
+- The voice assistant app can be set as a hardware shortcut button for convenience
+
+</details>
+
+<details>
+<summary>🔔 Phone Notifications</summary>
+
+- Popup about new notifications (on IDrive 4 or older)
+- Supports Dismiss, Mark As Read, replies or other notification actions
+
+</details>
+<details>
+<summary>🎵 Control of Android Auto compatible music apps</summary>
+
+- Supports browsing and searching apps' music libraries
+- Supports selecting from a list of currently-queued songs, as well as basic back/next control
+- Integrates into the car's audio context, for automatic resume and hardware button control
+- Supports controlling any active music session, even apps that aren't Android Auto compatible
+- Automatically updates the screen to follow the active app
+
+## Recommended compatible apps:
+
+|Category|Apps|
+|--------|------|
+|🎙 Audiobooks and Podcasts| [![Acast Podcast Player](https://play-lh.googleusercontent.com/QJ8PChzCg_lwdZLnsr_bliT_K88DMNi4UfWmK8zgjF7CgJ5mGzQZFV6ZrJUFiWJFfWS6=s30-rw)](https://play.google.com/store/apps/details?id=com.acast.nativeapp)[![AntennaPod](https://play-lh.googleusercontent.com/VV5fdZWuZolh8Ii8FiuxD7LYCacmT76sCxyuMTm7kyfsHJkBWfkHSZNmqr1UGTo6JZCq=s30-rw)](https://play.google.com/store/apps/details?id=de.danoeh.antennapod)[![The Bob & Tom Show](https://play-lh.googleusercontent.com/bwXFPAGsIBhp8xrFPATUzQk_y0pn230HHbMN9MxJ_GbTt5lN2-Fc_ShzyRtEfSDE9Vk=s30-rw)](https://play.google.com/store/apps/details?id=com.radio.station.BOB.TOM)[![Castbox](https://play-lh.googleusercontent.com/CzFEOgmTdindoUqV4xDpZMknyjplmSUgOU-W9DtTuAZuyzZy_8fn26BZDRXzSwDbOTEh=s30-rw)](https://play.google.com/store/apps/details?id=fm.castbox.audiobook.radio.podcast)[![Google Play Books](https://play-lh.googleusercontent.com/DglqS-eYHQYXnj8M8tmzh3JcKDXcidSo3IzgyCZzci8ZTV9Pmuk8vvIFh9XHOztC3Q=s30-rw)](https://play.google.com/store/apps/details?id=com.google.android.apps.books)[![iVoox](https://play-lh.googleusercontent.com/wt9Ca2lmCCmx-eEC5DwnUBj0VS8hgYkXlymD_Vh6tF8xTvat8xW41F4YBfvnCwLyJ3o=s30-rw)](https://play.google.com/store/apps/details?id=com.ivoox.app)[![Libro.fm Audiobooks](https://play-lh.googleusercontent.com/FAv5D8GukPgAF75mHk-jyCmBalu9c8XlHJnFsDCXx2dXzLfarAhXRu--gPhNYbXwTsw=s30-rw)](https://play.google.com/store/apps/details?id=fm.libro.librofm)[![Listen Audiobook Player](https://play-lh.googleusercontent.com/h1leqRpQBYVx06E_jwzTx25d5p1jJAj7D38y82dX3oLKxUxpBcZ3ybIzS0Cgq8hoZA=s30-rw)](https://play.google.com/store/apps/details?id=com.acmeandroid.listen)[![Player FM](https://play-lh.googleusercontent.com/VfeI7e9DAoVHcsMtAvvvjowaV3B_8NiH1Gc5gpKwld099MsQYefrgdis_uxSSXXHzUA=s30-rw)](https://play.google.com/store/apps/details?id=fm.player)[![Podcast Addict](https://play-lh.googleusercontent.com/m6FeLOkUfP8qTZNXKFSSI8_exI-SlGJRcIArl3gRm3-VninL7l1RdYlPkkf2CfbBnA=s30-rw)](https://play.google.com/store/apps/details?id=com.bambuna.podcastaddict)[![Voice Audiobook Player](https://play-lh.googleusercontent.com/JnpwL-hH58QmiY8J1sQNu-IV9WJyXPDKh_XHQLWEVZSOKAun3aRdXegt6r7NylXkTxQ=s30-rw)](https://play.google.com/store/apps/details?id=de.ph1b.audiobook)|
+|🎶 Music Library|[![AIMP](https://play-lh.googleusercontent.com/-JkPRxESEsV-NNwIRtK9Rz9scr0dbSG1ZbjqYlD-Fnuc_XlU4gJXK6O3T2GakXChKLw=s30-rw)](https://play.google.com/store/apps/details?id=com.aimp.player)[![Black Player](https://play-lh.googleusercontent.com/ydi6YT7fseMtxW6BtPloTbM5sOh8N8uTlQJSuoiDgkV3QcnmWKJf_6y2MTtLd5Imc2RC=s30-rw)](https://play.google.com/store/apps/details?id=com.musicplayer.blackplayerfree)[![DSub](https://play-lh.googleusercontent.com/3zxy2WpXxHIHPINy64OPMDxdUxXPGUaN6kkFAAOloixeAzZ76W1vSviltqvL1_WLiQ=s30-rw)](https://play.google.com/store/apps/details?id=github.daneren2005.dsub)[![jetAudio HD](https://play-lh.googleusercontent.com/vAFE5O6gYFztyv6izX6iQL7gSr4KFPiCoMbkdE8zhMBrgaVquafNhlEz8ZqFbCgqBRI=s30-rw)](https://play.google.com/store/apps/details?id=com.jetappfactory.jetaudio)[![Media Monkey](https://play-lh.googleusercontent.com/z8-oWNpF-tGhny3WZSjnLEX3GEX1bnTqXtr9Vl5GzcdJQ5Ir0P1G0nO5uWbQ1D6dPw=s30-rw)](https://play.google.com/store/apps/details?id=com.ventismedia.android.mediamonkey)[![Musicolet Music Player](https://play-lh.googleusercontent.com/UiLcHl3isy7o3ruzHguyvhXNMMykhcX931S4z25oJEXBso6Io48Nzw4osRwgaT41wXy3=s30-rw)](https://play.google.com/store/apps/details?id=in.krosbits.musicolet)[![Neutron Music Player](https://play-lh.googleusercontent.com/bxJS7S7gYeVg_wp7yf94f-dbgAUPgXL1fbrqH7z0ORRylQdnbu6hUJI9Pmw2BGvlBnPU=s30-rw)](https://play.google.com/store/apps/details?id=com.neutroncode.mp)[![Plex](https://play-lh.googleusercontent.com/it6VzGgcn3llVrhxeb27DnfIPtqFiNUqG9ANQH5guy-_SIDL8MuWbwzGqgaOWTwHVw=s30-rw)](https://play.google.com/store/apps/details?id=com.plexapp.android) (only music and podcasts)[![PowerAmp](https://play-lh.googleusercontent.com/JNLCAbchoImmBVGTrJPA8yGShvC6oaB1RdE08K_Cst96zcO84x8h9S1GxBc4utA7NhY=s30-rw)](https://play.google.com/store/apps/details?id=com.maxmpz.audioplayer)[![Retro Music Player](https://play-lh.googleusercontent.com/LsjjdQ5KSBnnztnMzRq8nTkmmCSINVE3BwSf4YG0Ps2ITGZQ-yV9pzbEAgkDXjx52140=s30-rw)](https://play.google.com/store/apps/details?id=code.name.monkey.retromusic)[![Rocket Player](https://play-lh.googleusercontent.com/-gZDC2jME2aa_ypUfIhZ0CUFKjtRMkfG07n2f9wtanUhhks-gyCAcBQ7D3legf4QwHh2=s30-rw)](https://play.google.com/store/apps/details?id=com.jrtstudio.AnotherMusicPlayer)[![TimberX Music Player](https://play-lh.googleusercontent.com/fe2R7dG26bUa7ZfLsM02Qp6HABZvsUDy2NbEqLm9VgzhNv8HPnwYmyFrYLunJnwspCZY=s30-rw)](https://play.google.com/store/apps/details?id=com.naman14.timberx)[![VLC For Android](https://play-lh.googleusercontent.com/nPnJc260PPoupBe-DcVQ-MNr6149dphdEoEAN-C9xwgctpVXbwsuyon_jEZ3uPWWYQ=s30-rw)](https://play.google.com/store/apps/details?id=org.videolan.vlc)|
+|📻 Radio |[![AP News](https://play-lh.googleusercontent.com/S-HMqzVMla41s4E8bxehHsNgHovPxmo1BVfkp0Z2nQ8UQ2Eda9WXh9PVCaQ18hALDk6m=s30-rw)](https://play.google.com/store/apps/details?id=mnn.Android)[![ARD Audiothek](https://play-lh.googleusercontent.com/AGjwvQCcOJ6M7U0m462b0-ltuAsr2B6JQnG7z6kXye-wefRA_2-9yanhJlq3vLZCzw=s30-rw)](https://play.google.com/store/apps/details?id=de.ard.audiothek)[![BFM](https://play-lh.googleusercontent.com/D8eKBxUYP-4z5HUpw-21XJGVcX28zOPpGL1sShtu1iSYcju0I4TpFr2pSSDPOhiKKQ=s30-rw)](https://play.google.com/store/apps/details?id=my.bfm.app)[![Dash Radio](https://play-lh.googleusercontent.com/DHsb8RuQyBYBtn4MQz3mygUWkSemqaE7lpfzLFrU9kST8N8zdXGUu9C0O2Wcx9pbEr9v=s30-rw)](https://play.google.com/store/apps/details?id=com.dashradio.dash)[![DI.FM](https://play-lh.googleusercontent.com/shNS3YU4kOYMC9CXGPusKJrau4nRbaHAcphTQeWUCDld1yLllkdCKY7vdudx2KLGVA=s30-rw)](https://play.google.com/store/apps/details?id=com.audioaddict.di)[![Energy Radio](https://play-lh.googleusercontent.com/2n0Qtlq_OEOSeIzLAjWS2tf9faTqPky1YgtQMO0T3PZ-hZx-NwDwLliUhDyx0qNGNw=s30-rw)](https://play.google.com/store/apps/details?id=radioenergy.app)[![HOT97 Official](https://play-lh.googleusercontent.com/JO7EC_h9VmZBY_UmuCWUBZ5Ox0l6bQLqjO5_s0OrBDZGvVCehvDfoQf20Zjf5ImqZBQ=s30-rw)](https://play.google.com/store/apps/details?id=com.jacapps.whhl)[![Nederland.FM](https://play-lh.googleusercontent.com/zePx7LWaRzRtSyDJ7vunUvUDkzkqOnabsxrmRd7BJ4DLhdp9e1oWA59Gvm9QzEusJD8=s30-rw)](https://play.google.com/store/apps/details?id=nl.nibbixsoft.app)[![NHL](https://play-lh.googleusercontent.com/PcRhAN7UCMXjWniDrZSUEBAcFFmJxqHFNbflUIYz_8UnDz6UOZKjKtLUUR4Nw1RPXA=s30-rw)](https://play.google.com/store/apps/details?id=com.nhl.gc1112.free)[![ntv Nachrichten](https://play-lh.googleusercontent.com/6LbwUsZ0guIPkMXVpJb0xDHyzwWRiMukwD6n6X4VyiXEoBM6KDWDakUVLXACODKm-5k=s30-rw)](https://play.google.com/store/apps/details?id=de.lineas.lit.ntv.android)[![NYTimes](https://play-lh.googleusercontent.com/gfmioo4VBEtPucdVNIYAyaqruXFRWDCc0nsBLORfOS0_s9r5r00Bn_IpjhCumkEusg=s30-rw)](https://play.google.com/store/apps/details?id=com.nytimes.android)[![R101](https://play-lh.googleusercontent.com/a4Awlcfa9DgT4i4Z3MAadPkzzWXSIGnmCZUpjHvWxzQLTHA3n0jhCulziPlbvxQNsUng=s30-rw)](https://play.google.com/store/apps/details?id=it.r101)[![Radio 105](https://play-lh.googleusercontent.com/UZaPRK333aBsEnT1EmojxYL5YCbM0FSRPveQT197wzlPry6JEIRONaWXoP6lXwSEUBw-=s30-rw)](https://play.google.com/store/apps/details?id=it.froggy.android.radio105)[![Radio FM](https://play-lh.googleusercontent.com/kBXRW_lN133DN1x0L7vLFhqHPwBPB2vJMnOPNbs7ygldRNadPI9D89xgaDqz-arbhnW2=s30-rw)](https://play.google.com/store/apps/details?id=com.radio.fmradio)[![Radio Monte Carlo](https://play-lh.googleusercontent.com/9XxJ7JX-1zJWGRn9B8H7R7c9Z2UiWe2eBhHKahS7Z7RGFLwMOygIIQly_ieBIwL83g=s30-rw)](https://play.google.com/store/apps/details?id=it.froggy.android.rmc)[![RTL 102.5](https://play-lh.googleusercontent.com/j_LJMB4WsMCnDCoe60M4nS8li7H_enzwcvei9wPK7__2ou3NWRI6kJyBARyR_IjCdbE=s30-rw)](https://play.google.com/store/apps/details?id=com.rtl.rtlapp)[![Scanner Radio](https://play-lh.googleusercontent.com/J3UkD7b2ZZ_kKJQ5ogT19uo2akaMLSMzNfIGyXIyWmt2vPRIJt2dIH8NHMnd0EyAWA=s30-rw)](https://play.google.com/store/apps/details?id=com.scannerradio)[![SiriusXM](https://play-lh.googleusercontent.com/kcrIJ1Nfq6wMpWnaQESHiqRkyTno0EO6FBtqqbptuo2IWhGMFN8WxqXkgijj7ChYuP9H=s30-rw)](https://play.google.com/store/apps/details?id=com.sirius)[![Simple Radio](https://play-lh.googleusercontent.com/Yc3oO-1vtI8SH9x6bqLj4H4NNYZ11BytbaHrYoBw8tjMhTejR3tvDERMq7Mnr8u05A=s30-rw)](https://play.google.com/store/apps/details?id=com.streema.simpleradio)[![sunshine live](https://play-lh.googleusercontent.com/jdsAyDG_U2nfCMsLMxz0yF0kilsk3iAeCSjOPGp46U50fACMDCSCnjPz1qihVctP9Q=s30-rw)](https://play.google.com/store/apps/details?id=app.sunshinelive.de.sunshinelive)[![Versuz Radio](https://play-lh.googleusercontent.com/KvcOYAcqF7jxvkG8VD54CtKddCqM601dwekO1xbwoBnNNjU8Ce3Um4FEubHOABSwi9Ra=s30-rw)](https://play.google.com/store/apps/details?id=com.versuzradio)[![Virgin Radio Italy](https://play-lh.googleusercontent.com/Hhw6FwdX6605arW9o-hen5lns0aXQzqLugI6XzT0Q-7nkPpyRRS5ST7mVBBPhQnSp88=s30-rw)](https://play.google.com/store/apps/details?id=it.froggy.android.virginradio)|
+|📡 Streaming Services |[![Apple Music](https://play-lh.googleusercontent.com/mOkjjo5Rzcpk7BsHrsLWnqVadUK1FlLd2-UlQvYkLL4E9A0LpyODNIQinXPfUMjUrbE=s30-rw)](https://play.google.com/store/apps/details?id=com.apple.android.music)[![SoundCloud](https://play-lh.googleusercontent.com/lvYCdrPNFU0Ar_lXln3JShoE-NaYF_V-DNlp4eLRZhUVkj00wAseSIm-60OoCKznpw=s30-rw)](https://play.google.com/store/apps/details?id=com.soundcloud.android)[![Spotify](https://play-lh.googleusercontent.com/UrY7BAZ-XfXGpfkeWg0zCCeo-7ras4DCoRalC_WXXWTK9q5b0Iw7B0YQMsVxZaNB7DM=s30-rw)](https://play.google.com/store/apps/details?id=com.spotify.music)[![Tidal](https://play-lh.googleusercontent.com/NHKjc2tcFMCS0A6yc_SeSbU_4D8oIrdrxdW4afzQtPpaEl9-8dbSa9SH8Ee1D0lGtOM=s30-rw)](https://play.google.com/store/apps/details?id=com.aspiro.tidal)|
+
+</details>
+
+<details>
+<summary>🗺 Google Maps*</summary>
+
+- Basic search and routing
+- Includes some dark themes
+- ⚠ Not compiled by default, because showing Google Maps in a car is against the Maps API license
+
+</details>
+    
 
 Integration Points
 ------------------
