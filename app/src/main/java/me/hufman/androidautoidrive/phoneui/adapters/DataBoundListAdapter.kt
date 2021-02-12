@@ -26,7 +26,9 @@ class DataBoundListAdapter<I, C>(val data: MutableList<I>, val layoutId: Int, va
 }
 
 class DataBoundViewHolder<I, C>(val binding: ViewDataBinding, val callback: C?): RecyclerView.ViewHolder(binding.root) {
+	var data: I? = null
 	fun setItem(item: I) {
+		this.data = item
 		binding.setVariable(BR.data, item)
 		if (callback != null) {
 			binding.setVariable(BR.callback, callback)

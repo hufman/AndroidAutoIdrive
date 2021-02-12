@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data class="NotificationSettingsBinding">
         <variable
@@ -17,6 +18,7 @@
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/swNotificationPopup"
             android:checked="@={settings.notificationPopup}"
+            app:animationDuration="300"
             android:alpha="@{capabilities.isPopupNotSupported() ? 0.5f : 1.0f}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,6 +28,7 @@
         <LinearLayout
             android:id="@+id/paneNotificationPopup"
             android:visibility="@{settings.notificationPopup}"
+            app:animationDuration="300"
             android:alpha="@{capabilities.isPopupNotSupported() ? 0.5f : 1.0f}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,6 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            app:animationDuration="300"
             android:alpha="@{capabilities.isTtsNotSupported() ? 0.5f : 1.0f}" >
             <TextView
                 android:id="@+id/txtTtsUnsupported"

@@ -33,6 +33,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:animationDuration="300"
             android:alpha="@{viewModel.isNaviNotSupported() ? 0.5f : 1.0f}">
             <TextView
                 android:layout_width="match_parent"

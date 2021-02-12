@@ -2,6 +2,7 @@ package me.hufman.androidautoidrive.music
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import me.hufman.androidautoidrive.R
 import me.hufman.androidautoidrive.carapp.AMAppInfo
 import me.hufman.androidautoidrive.carapp.AMAppInfo.Companion.getAppWeight
 import me.hufman.androidautoidrive.carapp.AMCategory
@@ -15,7 +16,8 @@ data class MusicAppInfo(override val name: String, override val icon: Drawable,
 	var controllable = false    // whether MediaSession can control it
 	var browseable = false      // whether any media items were discovered
 	var searchable = false      // whether any search results came back
-	var playsearchable = false  // whether the controller indicated PlayFromSearch support
+	var playsearchable = false  // whether the controller indicated PlayFromSearch supportm
+	var playing = false         // whether this MediaSession is currently playing
 
 	// AM App List display controls
 	var forcedCategory: AMCategory? = null
@@ -122,5 +124,19 @@ data class MusicAppInfo(override val name: String, override val icon: Drawable,
 
 	override fun toString(): String {
 		return "MusicAppInfo(name='$name', packageName='$packageName', className=$className, probed=$probed, connectable=$connectable, controllable=$controllable, browseable=$browseable, searchable=$searchable, playsearchable=$playsearchable)"
+	}
+
+	fun featuresString(): Context.() -> String {
+		val appInfo = this
+		return {
+			listOfNotNull(
+				if (appInfo.controllable && !appInfo.connectable) this.getString(R.string.musicAppControllable) else null,
+				if (appInfo.connectable) this.getString(R.string.musicAppConnectable) else null,
+				if (appInfo.browseable) this.getString(R.string.musicAppBrowseable) else null,
+				if (appInfo.searchable || appInfo.playsearchable) this.getString(R.string.musicAppSearchable) else null,
+				if (appInfo.controllable || appInfo.connectable) null else this.getString(R.string.musicAppUnavailable),
+				if (appInfo.hidden) this.getString(R.string.musicAppHidden) else null
+			).joinToString(", ")
+		}
 	}
 }

@@ -107,12 +107,15 @@ fun setBackgroundTint(view: View, value: Context.() -> Int) {
 }
 
 // Add an animation for alpha
-@BindingAdapter("android:alpha")
-fun setAlpha(view: View, value: Float) {
+@BindingAdapter("android:alpha", "app:animationDuration")
+fun setAlpha(view: View, value: Float, duration: Int) {
 	view.animation?.cancel()
-	ValueAnimator.ofFloat(view.alpha, value).apply {
-		addUpdateListener { view.alpha = it.animatedValue as Float }
-		start()
+	if (duration > 0) {
+		ValueAnimator.ofFloat(view.alpha, value).apply {
+			addUpdateListener { view.alpha = it.animatedValue as Float }
+			this.duration = duration.toLong()
+			start()
+		}
 	}
 }
 

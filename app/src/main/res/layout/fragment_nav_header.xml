@@ -42,6 +42,7 @@
                 android:layout_marginEnd="6dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_notify"
+                app:animationDuration="300"
                 android:alpha="@{viewModel.isCarConnected() ? 1.0f : 0.2f}"
                 app:tint="?android:attr/textColorSecondary"/>
             <ImageView
@@ -49,6 +50,7 @@
                 android:layout_height="8dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_dots_horiz_24dp"
+                app:animationDuration="300"
                 android:alpha="@{viewModel.isCarConnected() ? 1.0f : 0.2f}"
                 app:tint="?android:attr/textColorSecondary"/>
             <ImageView
@@ -58,6 +60,7 @@
                 android:layout_marginEnd="4dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_cellphone_android"
+                app:animationDuration="300"
                 android:alpha="@{viewModel.isCarConnected() ? 1.0f : 0.2f}"
                 app:animator="@{viewModel.isBclConnecting() ? @animator/pulse_in : null}"
                 app:tint="?android:attr/textColorSecondary"/>
@@ -70,12 +73,14 @@
                     android:layout_width="10dp"
                     android:layout_height="10dp"
                     android:src="@drawable/ic_bluetooth_24dp"
+                    app:animationDuration="300"
                     android:alpha="@{viewModel.isA2dpConnected() ? 1.0f : 0.0f}"/>
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="8dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_dots_horiz_24dp"
+                    app:animationDuration="300"
                     android:alpha="@{viewModel.isBclReady() || viewModel.isCarConnected() ? 1.0f : 0.2f}"
                     app:tint="?android:attr/textColorSecondary"/>
                 <ImageView
@@ -84,6 +89,7 @@
                     android:src="@drawable/ic_usb_24dp"
                     android:rotation="90"
                     app:animator="@{viewModel.isUsbConnected() &amp;&amp; !viewModel.isBclReady() ? @animator/pulse_in : null}"
+                    app:animationDuration="300"
                     android:alpha="@{viewModel.isUsbAccessory() &amp;&amp; viewModel.bclTransport != &quot;BT&quot; ? 1.0f : 0.0f}"/>
             </LinearLayout>
             <ImageView
@@ -93,6 +99,7 @@
                 android:layout_marginEnd="8dp"
                 android:scaleType="fitEnd"
                 android:src="@drawable/ic_car_sports"
+                app:animationDuration="300"
                 android:alpha="@{viewModel.isBclReady() ? 1.0f : 0.2f}"
                 app:animator="@{!viewModel.isBclReady() &amp;&amp; (viewModel.isUsbConnected() || viewModel.isBtConnected()) ? @animator/pulse_in : null}"
                 app:tint="?android:attr/textColorSecondary"/>

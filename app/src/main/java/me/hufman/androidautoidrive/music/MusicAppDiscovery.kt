@@ -33,9 +33,11 @@ class MusicAppDiscovery(val context: Context, val handler: Handler): CoroutineSc
 	// all detected apps
 	val allApps: List<MusicAppInfo>
 		get() {
+			val currentPlaying = musicSessions.getPlayingApp()
 			return synchronized(combinedApps) {
 				combinedApps.map { it.apply {
 					hidden = hiddenApps.contains(packageName)       // update the hidden flag
+					playing = currentPlaying?.packageName == packageName
 				} }
 			}
 		}
