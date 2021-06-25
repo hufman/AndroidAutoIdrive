@@ -93,7 +93,7 @@ class PermissionsModelTest {
 		whenever(spotifyConnector.connect()) doReturn result
 
 		viewModel.updateSpotify()
-		result.callback?.invoke(mock())     // should trigger _updateSpotify
+		result.listeners.keys.first().invoke(mock())     // should trigger _updateSpotify
 		assertEquals(false, viewModel.hasSpotifyControlPermission.value)
 		assertEquals("", context.run(viewModel.spotifyHint.value!!))
 	}
@@ -108,7 +108,7 @@ class PermissionsModelTest {
 		whenever(spotifyConnector.connect()) doReturn result
 
 		viewModel.updateSpotify()
-		result.callback?.invoke(mock())     // should trigger _updateSpotify
+		result.listeners.keys.first().invoke(mock())     // should trigger _updateSpotify
 		assertEquals(false, viewModel.hasSpotifyControlPermission.value)
 		context.run(viewModel.spotifyHint.value!!)
 		verify(context).getString(R.string.musicAppNotes_spotify_apiNotFound)
@@ -124,7 +124,7 @@ class PermissionsModelTest {
 		whenever(spotifyConnector.connect()) doReturn result
 
 		viewModel.updateSpotify()
-		result.callback?.invoke(mock())     // should trigger _updateSpotify
+		result.listeners.keys.first().invoke(mock())     // should trigger _updateSpotify
 		assertEquals(false, viewModel.hasSpotifyControlPermission.value)
 		context.run(viewModel.spotifyHint.value!!)
 		verify(context).getString(R.string.musicAppNotes_spotify_apiUnavailable)
@@ -140,7 +140,7 @@ class PermissionsModelTest {
 		whenever(spotifyConnector.connect()) doReturn result
 
 		viewModel.updateSpotify()
-		result.callback?.invoke(mock())     // should trigger _updateSpotify
+		result.listeners.keys.first().invoke(mock())     // should trigger _updateSpotify
 		assertEquals(false, viewModel.hasSpotifyControlPermission.value)
 		context.run(viewModel.spotifyHint.value!!)
 		verify(context).getString(R.string.musicAppNotes_spotify_apiUnavailable)
@@ -156,7 +156,7 @@ class PermissionsModelTest {
 		whenever(spotifyConnector.connect()) doReturn result
 
 		viewModel.updateSpotify()
-		result.callback?.invoke(mock())     // should trigger _updateSpotify
+		result.listeners.keys.first().invoke(mock())     // should trigger _updateSpotify
 		assertEquals(false, viewModel.hasSpotifyControlPermission.value)
 		assertEquals("", context.run(viewModel.spotifyHint.value!!))
 	}
@@ -171,7 +171,7 @@ class PermissionsModelTest {
 		whenever(spotifyConnector.connect()) doReturn result
 
 		viewModel.updateSpotify()
-		result.callback?.invoke(mock())     // should trigger _updateSpotify
+		result.listeners.keys.first().invoke(mock())     // should trigger _updateSpotify
 		assertEquals(false, viewModel.hasSpotifyControlPermission.value)
 		assertEquals("Unknown", context.run(viewModel.spotifyHint.value!!))
 	}
@@ -186,7 +186,7 @@ class PermissionsModelTest {
 		whenever(spotifyConnector.connect()) doReturn result
 
 		viewModel.updateSpotify()
-		result.callback?.invoke(mock())     // should trigger _updateSpotify
+		result.listeners.keys.first().invoke(mock())     // should trigger _updateSpotify
 		assertEquals(false, viewModel.hasSpotifyControlPermission.value)
 		assertEquals("Unknown", context.run(viewModel.spotifyHint.value!!))
 	}
@@ -220,12 +220,12 @@ class PermissionsModelTest {
 		whenever(spotifyConnector.connect()) doReturn result
 
 		viewModel.updateSpotify()   // tries to connect
-		result.callback?.invoke(mock())     // should trigger _updateSpotify
+		result.listeners.keys.first().invoke(mock())     // should trigger _updateSpotify
 		assertEquals(false, viewModel.hasSpotifyControlPermission.value)
 
 		// connection succeeded
 		whenever(spotifyConnector.previousControlSuccess()) doReturn true
-		result.callback?.invoke(mock())     // should trigger _updateSpotify
+		result.listeners.keys.first().invoke(mock())     // should trigger _updateSpotify
 		assertEquals(true, viewModel.hasSpotifyControlPermission.value)
 	}
 
@@ -241,7 +241,7 @@ class PermissionsModelTest {
 		whenever(spotifyConnector.connect()) doReturn result
 
 		viewModel.updateSpotify()
-		result.callback?.invoke(mock())
+		result.listeners.keys.first().invoke(mock())
 
 		assertEquals(false, viewModel.isSpotifyWebApiAuthorized.value)
 	}
@@ -258,7 +258,7 @@ class PermissionsModelTest {
 		whenever(spotifyConnector.connect()) doReturn result
 
 		viewModel.updateSpotify()
-		result.callback?.invoke(mock())
+		result.listeners.keys.first().invoke(mock())
 
 		assertEquals(true, viewModel.isSpotifyWebApiAuthorized.value)
 	}

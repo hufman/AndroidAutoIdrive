@@ -80,7 +80,7 @@ class PermissionsController(val activity: Activity) {
 	fun promptSpotifyControl() {
 		val connector = SpotifyAppController.Connector(activity, true)
 		connector.connect().apply {
-			callback = { it?.disconnect() }
+			subscribe { it?.disconnect() }
 		}
 	}
 

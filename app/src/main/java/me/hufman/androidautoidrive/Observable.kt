@@ -1,5 +1,7 @@
 package me.hufman.androidautoidrive
 
+import java.util.*
+
 /**
  * Represents a value that can be changed
  * A callback can be registered to be notified
@@ -22,17 +24,19 @@ abstract class Observable<T> {
 	 * Setting the callback after the Observable has been set will trigger the callback
 	 * The passed value has the updated value
 	 */
-	var callback: ((T?) -> Unit)? = null
-		set(value) {
-			field = value
-			if (!pending) callback?.invoke(this.value)
-		}
+	val listeners = WeakHashMap<(T?) -> Unit, Boolean>()
 
 	/**
 	 * A convenience function to set the callback
 	 */
 	fun subscribe(callback: (T?) -> Unit) {
-		this.callback = callback
+		listeners[callback] = true
+		if (!pending) callback.invoke(this.value)
+	}
+
+	fun callback() {
+		val callbacks = ArrayList(listeners.keys)
+		callbacks.forEach { it.invoke(this.value) }
 	}
 }
 
@@ -45,6 +49,6 @@ class MutableObservable<T>(initial: T? = null): Observable<T>() {
 		public set(value) {
 			pending = false
 			field = value
-			callback?.invoke(value)
+			callback()
 		}
 }

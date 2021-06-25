@@ -59,7 +59,14 @@ class SpotifyAppController(context: Context, val remote: SpotifyAppRemote, val w
 	}
 
 	class Connector(val context: Context, val prompt: Boolean = true, val isProbing: Boolean = false): MusicAppController.Connector {
-		var lastError: Throwable? = null
+		companion object {
+			var pendingController = MutableObservable<SpotifyAppController>().apply { value = null }
+			var lastError: Throwable? = null
+			var leasedOut = 0
+		}
+
+		val lastError: Throwable?
+			get() = Connector.lastError
 
 		fun hasSupport(): Boolean {
 			return SpotifyAppController.hasSupport(context)
@@ -80,20 +87,33 @@ class SpotifyAppController(context: Context, val remote: SpotifyAppRemote, val w
 			return connect()
 		}
 
-		fun connect(): Observable<SpotifyAppController> {
+		fun connect(): Observable<SpotifyAppController> = synchronized(Connector::class.java) {
+			if (pendingController.value?.connected == true) {
+				Log.i(TAG, "Returning active SpotifyAppController")
+				leasedOut += 1
+				return pendingController
+			}
+			if (pendingController.pending) {
+				Log.i(TAG, "Returning pending SpotifyAppController")
+				leasedOut += 1
+				return pendingController
+			}
+
 			Log.i(TAG, "Attempting to connect to Spotify Remote")
+			pendingController = MutableObservable()
+			leasedOut = 1
+
 			val params = ConnectionParams.Builder(getClientId(context))
 					.setRedirectUri(REDIRECT_URI)
 					.showAuthView(prompt)
 					.build()
 
-			val pendingController = MutableObservable<SpotifyAppController>()
 			val remoteListener = object: com.spotify.android.appremote.api.Connector.ConnectionListener {
 				override fun onFailure(e: Throwable?) {
 					Log.e(TAG, "Failed to connect to Spotify Remote: $e")
 					if (hasSupport(context)) {
 						// show an error to the UI, unless we don't have an API key
-						this@Connector.lastError = e
+						Connector.lastError = e
 					}
 					// remember that we failed to connect
 					if (pendingController.value == null) {
@@ -102,12 +122,14 @@ class SpotifyAppController(context: Context, val remote: SpotifyAppRemote, val w
 					// disconnect an existing session, if any
 					pendingController.value?.disconnect()
 					pendingController.value = null
+
+					leasedOut = 0
 				}
 
 				override fun onConnected(remote: SpotifyAppRemote?) {
 					if (remote != null) {
 						Log.i(TAG, "Successfully connected to Spotify Remote")
-						this@Connector.lastError = null
+						Connector.lastError = null
 
 						val appSettings = MutableAppSettingsReceiver(context)
 						appSettings[AppSettings.KEYS.SPOTIFY_CONTROL_SUCCESS] = "true"
@@ -130,6 +152,7 @@ class SpotifyAppController(context: Context, val remote: SpotifyAppRemote, val w
 					} else {
 						Log.e(TAG, "Connected to a null Spotify Remote?")
 						pendingController.value = null
+						leasedOut = 0
 					}
 				}
 			}
@@ -155,8 +178,8 @@ class SpotifyAppController(context: Context, val remote: SpotifyAppRemote, val w
 
 	var connected = true
 
+	var listeners = WeakHashMap<(MusicAppController) -> Unit, Boolean>()    // UI listeners
 	// Spotify is very asynchronous, save any subscription state for the getters
-	var callback: ((MusicAppController) -> Unit)? = null    // UI listener
 	val spotifySubscription: Subscription<PlayerState> = remote.playerApi.subscribeToPlayerState()
 	val playlistSubscription: Subscription<PlayerContext> = remote.playerApi.subscribeToPlayerContext()
 	var playerActions: PlayerRestrictions? = null
@@ -194,7 +217,7 @@ class SpotifyAppController(context: Context, val remote: SpotifyAppRemote, val w
 						currentSongCoverArtCache.put(track.imageUri, coverArt)
 						if (loadingTrack?.mediaId == currentTrack?.mediaId) {   // still playing the same song
 							currentTrack = MusicMetadata.fromSpotify(track, coverArt = coverArt)
-							callback?.invoke(this)
+							callback()
 						}
 					}
 				}
@@ -209,7 +232,7 @@ class SpotifyAppController(context: Context, val remote: SpotifyAppRemote, val w
 			// update a progress bar
 			position = PlaybackPosition(playerState.isPaused, false, lastPosition = playerState.playbackPosition, maximumPosition = playerState.track.duration)
 
-			callback?.invoke(this)
+			callback()
 		}
 
 		playlistSubscription.setEventCallback { playerContext ->
@@ -233,7 +256,7 @@ class SpotifyAppController(context: Context, val remote: SpotifyAppRemote, val w
 				}
 			}
 
-			callback?.invoke(this)
+			callback()
 		}
 	}
 
@@ -248,7 +271,7 @@ class SpotifyAppController(context: Context, val remote: SpotifyAppRemote, val w
 				queueMetadata = QueueMetadata("Liked Songs", null, queueItems)
 				loadQueueCoverart()
 
-				callback?.invoke(this@SpotifyAppController)
+				callback()
 			} else {
 				createQueueMetadata(PlayerContext(queueUri, "Liked Songs", null, null))
 			}
@@ -286,7 +309,7 @@ class SpotifyAppController(context: Context, val remote: SpotifyAppRemote, val w
 				loadQueueCoverart()
 
 				onQueueLoaded?.invoke()
-				callback?.invoke(this)
+				callback()
 			}
 		}
 	}
@@ -546,7 +569,12 @@ class SpotifyAppController(context: Context, val remote: SpotifyAppRemote, val w
 	}
 
 	override fun subscribe(callback: (MusicAppController) -> Unit) {
-		this.callback = callback
+		this.listeners[callback] = true
+	}
+
+	private fun callback() {
+		val listeners = ArrayList(this.listeners.keys)
+		listeners.forEach { it.invoke(this) }
 	}
 
 	override fun isConnected(): Boolean {
@@ -554,26 +582,35 @@ class SpotifyAppController(context: Context, val remote: SpotifyAppRemote, val w
 	}
 
 	override fun disconnect() {
-		Log.d(TAG, "Disconnecting from Spotify")
-		this.connected = false
-		this.callback = null
-		try {
-			spotifySubscription.cancel()
-		} catch (e: Exception) {
-			Log.w(TAG, "Exception while disconnecting from Spotify: $e")
-		}
-		try {
-			playlistSubscription.cancel()
-		} catch (e: Exception) {
-			Log.w(TAG, "Exception while disconnecting from Spotify: $e")
-		}
-		try {
-			SpotifyAppRemote.disconnect(remote)
-		} catch (e: Exception) {
-			Log.w(TAG, "Exception while disconnecting from Spotify: $e")
-		}
+		Log.d(TAG, "Decreasing leases from ${Connector.leasedOut} to ${Connector.leasedOut - 1}")
+		Connector.leasedOut -= 1
+		if (Connector.leasedOut <= 0) {
+			Log.d(TAG, "Disconnecting from Spotify")
+			this.connected = false
+			this.listeners.clear()
+			try {
+				spotifySubscription.setEventCallback(null)
+				spotifySubscription.cancel()
+			} catch (e: Exception) {
+				Log.w(TAG, "Exception while disconnecting from Spotify: $e")
+			}
+			try {
+				playlistSubscription.setEventCallback(null)
+				playlistSubscription.cancel()
+			} catch (e: Exception) {
+				Log.w(TAG, "Exception while disconnecting from Spotify: $e")
+			}
+			try {
+				SpotifyAppRemote.disconnect(remote)
+			} catch (e: Exception) {
+				Log.w(TAG, "Exception while disconnecting from Spotify: $e")
+			}
 
-		webApi.disconnect()
+			webApi.disconnect()
+
+			// When the final SpotifyAppController closes the connection, clear any pendingController
+			Connector.pendingController.value = null
+		}
 	}
 
 	override fun toString(): String {

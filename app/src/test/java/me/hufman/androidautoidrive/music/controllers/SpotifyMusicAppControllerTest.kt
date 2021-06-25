@@ -801,9 +801,9 @@ class SpotifyMusicAppControllerTest {
 	@Test
 	fun testDisconnect() {
 		controller.subscribe {  }
-		assertNotEquals(null, controller.callback)
+		assertEquals(1, controller.listeners.size)
 		controller.disconnect()
-		assertEquals(null, controller.callback)
+		assertEquals(0, controller.listeners.size)
 		verify(controller.spotifySubscription).cancel()
 		verify(controller.playlistSubscription).cancel()
 		verify(webApi).disconnect()

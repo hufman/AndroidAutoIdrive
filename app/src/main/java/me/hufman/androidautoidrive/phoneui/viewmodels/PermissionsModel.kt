@@ -60,7 +60,7 @@ class PermissionsModel(private val notificationListenerState: LiveData<Boolean>,
 
 		if (hasSpotify) {
 			spotifyConnector.connect().apply {
-				callback = { _updateSpotify(); it?.disconnect() }
+				subscribe { _updateSpotify(); it?.disconnect() }
 			}
 		}
 	}
