@@ -44,6 +44,7 @@ interface AppSettings {
 		SPOTIFY_CONTROL_SUCCESS("Spotify_Control_Success", "false", "Whether Spotify Control api worked previously"),
 		SPOTIFY_SHOW_UNAUTHENTICATED_NOTIFICATION("Spotify_Show_Unauthenticated_Notification", "false", "Show a notification when the Spotify Web API is not authenticated"),
 		SPOTIFY_AUTH_STATE_JSON("Spotify_Auth_State_Json", "", "String serialized JSON representation of the Spotify Web API AuthState."),
+		SPOTIFY_LIKED_SONGS_PLAYLIST_STATE("Spotify_Liked_Songs_Playlist_State", "", "Spotify Liked Songs playlist state."),
 		CACHED_CAR_CAPABILITIES("Cached_Car_Capabilities", "{}", "JSON Object of any previously-cached capabilities"),
 		CACHED_CAR_DATA("Cached_Car_Data", "{}", "JSON Object of any previously-cached cds properties"),
 		PREFER_CAR_LANGUAGE("Prefer_Car_Language", "true", "Prefer the car's language instead of the phone's language"),

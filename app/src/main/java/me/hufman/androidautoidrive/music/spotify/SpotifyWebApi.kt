@@ -10,7 +10,9 @@ import android.os.Handler
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.adamratzman.spotify.*
+import com.adamratzman.spotify.models.PlaylistUri
 import com.adamratzman.spotify.models.SpotifyImage
+import com.adamratzman.spotify.models.SpotifyUri
 import com.adamratzman.spotify.models.Token
 import kotlinx.coroutines.runBlocking
 import me.hufman.androidautoidrive.AppSettings
@@ -18,6 +20,7 @@ import me.hufman.androidautoidrive.MutableAppSettings
 import me.hufman.androidautoidrive.R
 import me.hufman.androidautoidrive.music.MusicAppDiscovery
 import me.hufman.androidautoidrive.music.MusicAppInfo
+import me.hufman.androidautoidrive.music.MusicMetadata
 import me.hufman.androidautoidrive.music.controllers.SpotifyAppController
 import me.hufman.androidautoidrive.phoneui.SpotifyAuthorizationActivity
 import net.openid.appauth.*
@@ -34,6 +37,7 @@ class SpotifyWebApi private constructor(val context: Context, val appSettings: M
 		const val TAG = "SpotifyWebApi"
 		const val NOTIFICATION_CHANNEL_ID = "SpotifyAuthorization"
 		const val NOTIFICATION_REQ_ID = 56
+		const val LIKED_SONGS_PLAYLIST_NAME = "ANDROIDAUTOIDRIVE_LIKED_SONGS"
 
 		private var webApiInstance: SpotifyWebApi? = null
 
@@ -70,6 +74,79 @@ class SpotifyWebApi private constructor(val context: Context, val appSettings: M
 	fun clearGetLikedSongsAttemptedFlag() {
 		getLikedSongsAttempted = false
 		spotifyAppControllerCaller = null
+	}
+
+	/**
+	 * Creates a private playlist with the provided name and optionally provided description. The
+	 * newly created playlist's [PlaylistUri] is returned.
+	 */
+	suspend fun createPlaylist(playlistName: String, playlistDescription: String? = null): PlaylistUri? {
+		try {
+			return webApi?.playlists?.createClientPlaylist(name = playlistName, description = playlistDescription, public = false)?.uri
+		} catch (e: SpotifyException.AuthenticationException) {
+			Log.e(TAG, "Failed to create playlist $playlistName due to authentication error with the message: ${e.message}")
+			authStateManager.addAccessTokenAuthorizationException(e)
+			createNotAuthorizedNotification()
+			webApi = null
+		} catch (e: Exception) {
+			Log.e(TAG, "Exception occurred when trying to create playlist $playlistName with the message: ${e.message}")
+		}
+		return null
+	}
+
+	/**
+	 * Adds the provided list of songs to the specified playlist.
+	 */
+	suspend fun addSongsToPlaylist(playlistId: String, songs: List<MusicMetadata>) {
+		try {
+			webApi?.playlists?.addTracksToClientPlaylist(playlistId, *songs.map { it.mediaId!! }.toTypedArray())
+		} catch (e: SpotifyException.AuthenticationException) {
+			Log.e(TAG, "Failed to add songs to playlist $playlistId due to authentication error with the message: ${e.message}")
+			authStateManager.addAccessTokenAuthorizationException(e)
+			createNotAuthorizedNotification()
+			webApi = null
+		} catch (e: Exception) {
+			Log.e(TAG, "Exception occurred when trying to add songs to playlist $playlistId with the message: ${e.message}")
+		}
+	}
+
+	/**
+	 * Replaces the songs of the specified playlist with the provided list of songs.
+	 */
+	suspend fun replacePlaylistSongs(playlistId: String, songs: List<MusicMetadata>) {
+		try {
+			webApi?.playlists?.replaceClientPlaylistTracks(playlistId, *songs.map { it.mediaId!! }.toTypedArray())
+		} catch (e: SpotifyException.AuthenticationException) {
+			Log.e(TAG, "Failed to replace playlist $playlistId songs due to authentication error with the message: ${e.message}")
+			authStateManager.addAccessTokenAuthorizationException(e)
+			createNotAuthorizedNotification()
+			webApi = null
+		} catch (e: Exception) {
+			Log.e(TAG, "Exception occurred when trying to replace playlist $playlistId songs with the message: ${e.message}")
+		}
+	}
+
+	/**
+	 * Returns the [SpotifyUri] associated to the provided playlist name or null if it is not found.
+	 */
+	suspend fun getPlaylistUri(playlistName: String): SpotifyUri? {
+		try {
+			val playlists = webApi?.playlists?.getClientPlaylists(15,0)
+			val matchingPlaylist = playlists?.items?.filter { it.name == playlistName }
+			return if (matchingPlaylist.isNullOrEmpty()) {
+				null
+			} else {
+				matchingPlaylist[0].uri
+			}
+		} catch (e:SpotifyException.AuthenticationException) {
+			Log.e(TAG, "Failed to find playlist with name $playlistName due to authentication error with the message: ${e.message}")
+			authStateManager.addAccessTokenAuthorizationException(e)
+			createNotAuthorizedNotification()
+			webApi = null
+		} catch (e: Exception) {
+			Log.e(TAG, "Exception occurred when trying to find playlist with name $playlistName with the message: ${e.message}")
+		}
+		return null
 	}
 
 	suspend fun getLikedSongs(spotifyAppController: SpotifyAppController): List<SpotifyMusicMetadata>?  {
@@ -199,6 +276,7 @@ class SpotifyWebApi private constructor(val context: Context, val appSettings: M
 		webApi = createWebApiClient()
 		if (webApi != null) {
 			authStateManager.updateTokenResponseWithToken(webApi!!.token, clientId)
+
 			if (getLikedSongsAttempted) {
 				getLikedSongsAttempted = false
 				spotifyAppControllerCaller?.createLikedSongsQueueMetadata()

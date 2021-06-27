@@ -52,6 +52,7 @@ object L {
 	var MUSIC_TURN_REPEAT_ALL_ON = "Turn Repeat All On"
 	var MUSIC_TURN_REPEAT_ONE_ON = "Turn Repeat One On"
 	var MUSIC_TURN_REPEAT_OFF = "Turn Repeat Off"
+	var MUSIC_TEMPORARY_PLAYLIST_DESCRIPTION = "AndroidAutoIDrive dummy playlist - please do not delete"
 
 	var MUSIC_ACTION_SEEK_BACK_5 = "Seek back 5 seconds"
 	var MUSIC_ACTION_SEEK_BACK_10 = "Seek back 10 seconds"
