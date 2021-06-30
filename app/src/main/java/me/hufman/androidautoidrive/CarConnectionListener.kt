@@ -32,7 +32,7 @@ class CarConnectionListener: BroadcastReceiver() {
 		}
 		if (intent.action == IDriveConnectionReceiver.INTENT_DETACHED ||
 				intent.action == "me.hufman.androidautoidrive.CarConnectionListener_STOP") {
-			context.stopService(Intent(context, MainService::class.java).setAction(MainService.ACTION_STOP))
+			context.startService(Intent(context, MainService::class.java).setAction(MainService.ACTION_STOP))
 		}
 	}
 
