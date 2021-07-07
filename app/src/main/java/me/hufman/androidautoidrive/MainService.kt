@@ -203,7 +203,8 @@ class MainService: Service() {
 		if (carProberThread?.isAlive != true) {
 			carProberThread = CarProber(securityAccess,
 				CarAppAssetManager(applicationContext, "smartthings").getAppCertificateRaw("bmw")!!.readBytes(),
-				CarAppAssetManager(applicationContext, "smartthings").getAppCertificateRaw("mini")!!.readBytes()
+				CarAppAssetManager(applicationContext, "smartthings").getAppCertificateRaw("mini")!!.readBytes(),
+				CarAppAssetManager(applicationContext, "cdsbaseapp").getAppCertificateRaw("")!!.readBytes()
 			).apply { start() }
 		} else {
 			carProberThread?.schedule(1000)
@@ -229,6 +230,7 @@ class MainService: Service() {
 			foregroundNotificationBuilder.setContentText(getString(R.string.connectionStatusWaiting))
 			foregroundNotificationBuilder.setOngoing(false) // able to swipe away if we aren't currently connected
 		} else {
+			foregroundNotificationBuilder.setContentText(getText(R.string.notification_description))
 			if (brand?.toLowerCase(Locale.ROOT) == "bmw") foregroundNotificationBuilder.setContentText(getText(R.string.notification_description_bmw))
 			if (brand?.toLowerCase(Locale.ROOT) == "mini") foregroundNotificationBuilder.setContentText(getText(R.string.notification_description_mini))
 
@@ -288,7 +290,9 @@ class MainService: Service() {
 						carInformationObserver.cdsData[CDS.VEHICLE.LANGUAGE] == null) {
 					// still waiting for language
 					Log.d(TAG, "Waiting for the car's language to be confirmed")
-				} else {
+				} else if (iDriveConnectionReceiver.brand == "bmw" || iDriveConnectionReceiver.brand == "mini") {
+					// RHMI apps are not supported in J29
+
 					// start notifications
 					startAny = startAny or startNotifications()
 
@@ -344,7 +348,7 @@ class MainService: Service() {
 					}
 
 					carappCapabilities = CarInformationDiscovery(iDriveConnectionReceiver, securityAccess,
-							CarAppAssetManager(applicationContext, "smartthings"), carInformationUpdater)
+							CarAppAssetManager(applicationContext, "cdsbaseapp"), carInformationUpdater)
 					carappCapabilities?.onCreate()
 				}
 				threadCapabilities?.start()

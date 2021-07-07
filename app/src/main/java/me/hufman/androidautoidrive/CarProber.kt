@@ -15,7 +15,7 @@ import java.net.Socket
 /**
  * Tries to connect to a car
  */
-class CarProber(val securityAccess: SecurityAccess, val bmwCert: ByteArray, val miniCert: ByteArray): HandlerThread("CarProber") {
+class CarProber(val securityAccess: SecurityAccess, val bmwCert: ByteArray, val miniCert: ByteArray, val j29Cert: ByteArray): HandlerThread("CarProber") {
 	companion object {
 		val PORTS = listOf(4004, 4005, 4006, 4007, 4008)
 		val TAG = "CarProber"
@@ -94,9 +94,13 @@ class CarProber(val securityAccess: SecurityAccess, val bmwCert: ByteArray, val 
 		var success = false
 		var errorMessage: String? = null
 		var errorException: Throwable? = null
-		for (brand in listOf("bmw", "mini")) {
+		for (brand in listOf("bmw", "mini", "j29")) {
 			try {
-				val cert = if (brand == "bmw") bmwCert else miniCert
+				val cert = when(brand) {
+					"bmw" -> bmwCert
+					"mini" -> miniCert
+					else -> j29Cert
+				}
 				val signedCert = CertMangling.mergeBMWCert(cert, securityAccess.fetchBMWCerts(brandHint = brand))
 				val conn = IDriveConnection.getEtchConnection("127.0.0.1", port, BaseBMWRemotingClient())
 				val sas_challenge = conn.sas_certificate(signedCert)
@@ -118,6 +122,11 @@ class CarProber(val securityAccess: SecurityAccess, val bmwCert: ByteArray, val 
 				if (hmiType?.startsWith("MINI") == true) {
 					// MINI connected
 					setConnectedState(port, "mini")
+					success = true
+					break
+				}
+				if (brand == "j29") {
+					setConnectedState(port, "j29")
 					success = true
 					break
 				}

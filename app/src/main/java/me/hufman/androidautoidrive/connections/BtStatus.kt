@@ -13,7 +13,7 @@ import java.lang.IllegalArgumentException
 import java.util.*
 
 fun BluetoothDevice.isCar(): Boolean {
-	return this.name.startsWith("BMW") || this.name.startsWith("MINI")
+	return this.name.startsWith("BMW") || this.name.startsWith("MINI") || this.name.startsWith("TOYOTA")
 }
 
 class BtStatus(val context: Context, val callback: () -> Unit) {
